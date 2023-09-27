@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="col-lg-5">
+        <form method="POST" action="/analyze_sentiment">
+            <input class="form-control" type="text" name="text" ><br>
+            <input class="btn btn-outline-success" type="submit" value="Analyze">
+        </form>
+    </div>
+
+    
+</div>
+{% endblock%}

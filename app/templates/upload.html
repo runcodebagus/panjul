@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="col-lg-5">
+        <form method="POST" action="/upload_file" enctype="multipart/form-data">
+            <input class="form-control" type="file" name="file" accept=".csv, .xls, .xlsx"><br>
+            <input class="btn btn-outline-success" type="submit" value="Analyze">
+        </form>
+    </div>
+
+    
+        <!-- Tampilkan pesan sukses unggah jika pesan ada -->
+        {% if upload_success_message %}
+            <div class="success-message">
+                <p>{{ upload_success_message }}</p>
+            </div>
+        {% endif %}
+    
+        <!-- Tampilkan pesan sukses prediksi jika pesan ada -->
+        {% if prediction_success_message %}
+            <div class="success-message">
+                <p>{{ prediction_success_message }}</p>
+            </div>
+        {% endif %}
+        
+        <!-- Tampilkan pesan kesalahan jika ada -->
+        {% if error_message %}
+            <div class="error-message">
+                <p>{{ error_message }}</p>
+            </div>
+        {% endif %}
+    
+        {% if df is defined %}
+            <h2>Hasil Prediksi Sentimen:</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Komentar</th>
+                        <th>Sentimen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, row in df.iterrows() %}
+                        <tr>
+                            <td>{{ row['Komentar'] }}</td>
+                            <td>{{ row['Sentiment'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+</div>
+{% endblock%}
