@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container ">
+    <form action="/analyze_sentiment" method="POST" enctype="multipart/form-data">
+        <div class="mb-3 col-lg-5 ">
+            <label for="analisis" class="form-label">Analisis Sentimen</label>
+            <input type="analisis" name="text" class="form-control" id="analisis" required>
+            <button type="submit" class="btn btn-outline-primary mt-4">Analisis</button>
+        </div>
+    </form>
+    <!-- {% if sentiment %}
+    <p class="result">Sentiment: {{ sentiment }}</p>
+    <p class="result">Text: {{ text }}</p>
+    {% endif %} -->
+
+    <ul>
+        {% for text, sentiment in results %}
+
+
+            <li>
+                <strong>Teks :</strong> {{ text }}<br>
+
+                {% if sentiment == 0 %}
+                    <strong>Sentimen : Bulliying</strong> 
+                {% else %}
+                    <strong>Sentimen : Non-Bulliying</strong> 
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock%}
