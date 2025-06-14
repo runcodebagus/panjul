@@ -1,54 +1,59 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
+<div class="container mt-4">
     <div class="col-lg-5">
         <form method="POST" action="/upload_file" enctype="multipart/form-data">
-            <input class="form-control" type="file" name="file" accept=".csv, .xls, .xlsx"><br>
+            <input class="form-control" type="file" name="file" accept=".csv, .xls, .xlsx" required><br>
             <input class="btn btn-outline-success" type="submit" value="Analyze">
         </form>
     </div>
 
-    
-        <!-- Tampilkan pesan sukses unggah jika pesan ada -->
-        {% if upload_success_message %}
-            <div class="success-message">
-                <p>{{ upload_success_message }}</p>
-            </div>
-        {% endif %}
-    
-        <!-- Tampilkan pesan sukses prediksi jika pesan ada -->
-        {% if prediction_success_message %}
-            <div class="success-message">
-                <p>{{ prediction_success_message }}</p>
-            </div>
-        {% endif %}
-        
-        <!-- Tampilkan pesan kesalahan jika ada -->
-        {% if error_message %}
-            <div class="error-message">
-                <p>{{ error_message }}</p>
-            </div>
-        {% endif %}
-    
-        {% if df is defined %}
-            <h2>Hasil Prediksi Sentimen:</h2>
-            <table>
-                <thead>
+    <br>
+
+    <!-- Pesan sukses upload -->
+    {% if upload_success_message %}
+        <div class="alert alert-success">
+            <p>{{ upload_success_message }}</p>
+        </div>
+    {% endif %}
+
+    <!-- Pesan sukses prediksi -->
+    {% if prediction_success_message %}
+        <div class="alert alert-success">
+            <p>{{ prediction_success_message }}</p>
+        </div>
+    {% endif %}
+
+    <!-- Pesan error -->
+    {% if error_message %}
+        <div class="alert alert-danger">
+            <p>{{ error_message }}</p>
+        </div>
+    {% endif %}
+
+    <!-- Hasil prediksi -->
+    {% if df is defined %}
+        <h3 class="mt-4">Hasil Prediksi Sentimen:</h3>
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Komentar</th>
+                    <th>Sentimen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, row in df.iterrows() %}
                     <tr>
-                        <th>Komentar</th>
-                        <th>Sentimen</th>
+                        <td>{{ row['Komentar'] }}</td>
+                        <td>{{ row['Sentiment'] }}</td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for index, row in df.iterrows() %}
-                        <tr>
-                            <td>{{ row['Komentar'] }}</td>
-                            <td>{{ row['Sentiment'] }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Tombol Download (jika kamu simpan df.to_csv di folder static) -->
+        <a href="{{ url_for('static', filename='results.csv') }}" class="btn btn-primary mt-3" download>Download Hasil CSV</a>
+    {% endif %}
 </div>
-{% endblock%}
+{% endblock %}
