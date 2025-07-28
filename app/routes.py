@@ -13,10 +13,10 @@ from werkzeug.utils import secure_filename
 
 
 # Load the model and vectorizer
-with open('model.pkl', 'rb') as model_file:
+with open('model/model.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
-with open('vectorizer.pkl', 'rb') as vectorizer_file:
+with open('model/vectorizer.pkl', 'rb') as vectorizer_file:
     count_vectorizer = pickle.load(vectorizer_file)
 
 nltk.download('stopwords')

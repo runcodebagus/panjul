@@ -1,34 +1,54 @@
-{% extends "base.html" %}
-
-{% block content %}
-<div class="container ">
-    <form action="/analyze_sentiment" method="POST" enctype="multipart/form-data">
-        <div class="mb-3 col-lg-5 ">
-            <label for="analisis" class="form-label">Analisis Sentimen</label>
-            <input type="analisis" name="text" class="form-control" id="analisis" required>
-            <button type="submit" class="btn btn-outline-primary mt-4">Analisis</button>
+{% extends "base.html" %} {% block content %}
+<!-- Subscribe Section -->
+<section id="subscribe" class="subscribe section">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row gy-4 justify-content-between align-items-center">
+      <div class="col-lg-6">
+        <div class="cta-content" data-aos="fade-up" data-aos-delay="200">
+          <h2>Cek Sentimen Analisis</h2>
+          <p>
+            Silahkan masukkan kata atau kalimat untuk mengetahui sentimen apakah
+            termasuk Bulliying atau Non-Bulliying
+          </p>
+          <form
+            action="/analyze_sentiment"
+            method="post"
+            class="cta-form"
+            enctype="multipart/form-data"
+          >
+            <div class="input-group mb-3">
+              <input type="analisis" class="form-control" name="text" required />
+              <button class="btn btn-primary" type="submit">Analisis</button>
+            </div>
+          </form>
         </div>
-    </form>
-    <!-- {% if sentiment %}
-    <p class="result">Sentiment: {{ sentiment }}</p>
-    <p class="result">Text: {{ text }}</p>
-    {% endif %} -->
 
-    <ul>
-        {% for text, sentiment in results %}
+        <ul>
+          {% for text, sentiment in results %}
 
+          <li>
+            <strong>Teks :</strong> {{ text }}<br />
 
-            <li>
-                <strong>Teks :</strong> {{ text }}<br>
-
-                {% if sentiment == 0 %}
-                    <strong>Sentimen : Bulliying</strong> 
-                {% else %}
-                    <strong>Sentimen : Non-Bulliying</strong> 
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-</div>
-
+            {% if sentiment == 0 %}
+            <strong>Sentimen : Bulliying</strong>
+            {% else %}
+            <strong>Sentimen : Non-Bulliying</strong>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <div class="cta-image" data-aos="zoom-out" data-aos-delay="200">
+          <img
+            src="{{ url_for('static', filename='img/cta/cta-1.webp') }}"
+            alt=""
+            class="img-fluid"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /Subscribe Section -->
 {% endblock%}

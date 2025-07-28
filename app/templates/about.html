@@ -1,8 +1,102 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <h3>Judul About</h3>
-    <p>isi judul</p>
+
+<div class="container mt-5">
+
+
+      <section id="about" class="about section">
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+          <h2>Tantang Aplikasi</h2>
+        </div>
+        <!-- End Section Title -->
+
+        <div class="container">
+          <div class="row gy-4">
+            <div class="container mt-5">
+
+              <div class="row row-cols-1 row-cols-md-2 g-4">
+                <!-- Card Tujuan -->
+                <div class="col">
+                  <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                      <h5 class="card-title">🎯 Tujuan Aplikasi</h5>
+                      <p class="card-text">
+                        Aplikasi ini bertujuan untuk membantu pengguna dalam
+                        menganalisis sentimen dari teks, baik dari ulasan, media
+                        sosial, maupun data survei. Dengan pendekatan machine
+                        learning, pengguna bisa mengetahui opini publik dengan
+                        cepat dan akurat.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card Cara Kerja -->
+                <div class="col">
+                  <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                      <h5 class="card-title">Cara Kerja</h5>
+                      <p class="card-text">
+                        1. Masukkan teks secara langsung atau unggah file berisi
+                        data.<br />
+                        2. Masuk ke menu analisis jika ingin langsung analisis
+                        sentimen<br />
+                        3. Jika ada data dalam bentuk file excel dan csv, pilih
+                        menu upload untuk mengunggah data.<br />
+                        4. Aplikasi akan memproses data menggunakan model Naive
+                        Bayes untuk menentukan sentimen.<br />
+                        5. Hasil analisis akan ditampilkan dalam bentuk grafik
+                        dan ringkasan sentimen.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card Teknologi -->
+                <div class="col">
+                  <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                      <h5 class="card-title">Teknologi yang Digunakan</h5>
+                      <p class="card-text">
+                        - Python (Flask)<br />
+                        - Naive Bayes<br />
+                        - HTML, CSS, Bootstrap
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card Tentang Pengembang -->
+                <div class="col">
+                  <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                      <h5 class="card-title">Tentang Pengembang</h5>
+                      <p class="card-text">
+                        Aplikasi ini dikembangkan oleh <strong>Sofanji</strong>,
+                        mahasiswa Politeknik Harapan Bersama Tegal, sebagai
+                        bagian dari tugas akhir. Fokus pada bidang NLP, data
+                        science, dan pengembangan web.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kontak -->
+              <div class="text-center mt-5">
+                <h5>📬 Kontak</h5>
+                <p>
+                  GitHub: <a href="#">github.com/username</a><br />
+                  Email:
+                  <a href="mailto:email@example.com">email@example.com</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /About Section -->
 </div>
 {% endblock%}

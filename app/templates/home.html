@@ -1,10 +1,166 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-<h1>hello</h1>
-</div>
 
-    
-</div>
+   <!-- Hero Section -->
+      <section id="hero" class="hero section dark-background">
+        <div class="container">
+          <div class="row gy-4">
+            <div
+              class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center"
+              data-aos="zoom-out"
+            >
+              <h1>Analisis Sentimen Otomatis untuk Data Anda</h1>
+              <p>
+                Ubah opini menjadi wawasan dengan platform analisis sentimen
+                kami.
+              </p>
+              <div class="d-flex">
+                <a href="/analisis" class="btn-get-started"
+                  >Tes Analisis Sentimen</a
+                >
+              </div>
+            </div>
+            <div
+              class="col-lg-6 order-1 order-lg-2 hero-img"
+              data-aos="zoom-out"
+              data-aos-delay="200"
+            >
+              <img
+                src="assets/img/hero-img.png"
+                class="img-fluid animated"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /Hero Section -->
+
+      <!-- Recent Blog Postst Section -->
+      <section id="recent-blog-postst" class="recent-blog-postst section light-background" >
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+          <h2>Fitur Sistem</h2>
+        </div>
+        <!-- End Section Title -->
+
+        <div class="container">
+          <div class="row gy-5">
+            <div class="col-xl-4 col-md-6">
+              <div
+                class="post-item position-relative h-100"
+                data-aos="fade-up"
+                data-aos-delay="100"
+              >
+                <div class="post-img position-relative overflow-hidden">
+                  <img
+                    src="{{ url_for('static', filename='img/analitic.png') }}"
+                    class="" height="300" width="300"
+                    alt=""
+                  />
+                </div>
+
+                <div class="post-content d-flex flex-column">
+                  <h3 class="post-title">
+                    Analisis Instan
+                  </h3>
+
+                  <div class="meta d-flex align-items-center">
+                    <p>
+                        Masukkan teks langsung dan lihat hasil sentimennya dalam hitungan detik.
+                    </p>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- End post item -->
+
+            <div class="col-xl-4 col-md-6">
+              <div
+                class="post-item position-relative h-100"
+                data-aos="fade-up"
+                data-aos-delay="200"
+              >
+                <div class="post-img position-relative overflow-hidden">
+                  <img
+                    src="{{ url_for('static', filename='img/upload.png') }}"
+                    class="img-fluid"
+                    alt=""
+                  />
+                </div>
+
+                <div class="post-content d-flex flex-column">
+                  <h3 class="post-title">
+                    Upload Instan
+                  </h3>
+
+                  <div class="meta d-flex align-items-center">
+                    <p>
+                        Unggah file CSV untuk analisis masal secara otomatis.
+                    </p>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- End post item -->
+
+            <div
+              class="col-xl-4 col-md-6"
+              data-aos="fade-up"
+              data-aos-delay="300"
+            >
+              <div class="post-item position-relative h-100">
+                <div class="post-img position-relative overflow-hidden">
+                  <img
+                    src="{{ url_for('static', filename='img/ai.png') }}"
+                    class="img-fluid"
+                    alt=""
+                  />
+                </div>
+
+                <div class="post-content d-flex flex-column">
+                  <h3 class="post-title">
+                   Tentang Sistem
+                  </h3>
+
+                  <div class="meta d-flex align-items-center">
+                    <p>
+                        Didukung model machine learning yaitu Naive Bayes.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End post item -->
+          </div>
+        </div>
+      </section>
+      <!-- /Recent Blog Postst Section -->
+
+      <!-- Call To Action Section -->
+      <section id="call-to-action" class="call-to-action section dark-background">
+        <img src="" alt="" />
+
+        <div class="container">
+          <div class="row" data-aos="zoom-in" data-aos-delay="100">
+            <div class="col-xl-9 text-center text-xl-start">
+              <h3>Siap Menganalisis sentimen anda?</h3>
+              <p>
+                Gunakan platform ini untuk mengubah opini menjadi wawasan
+                bermakna. Baik Anda ingin menganalisis satu kalimat atau ribuan
+                data dari pelanggan, semuanya bisa dilakukan dengan mudah.
+              </p>
+            </div>
+            <div class="col-xl-3 cta-btn-container text-center">
+              <a class="cta-btn align-middle" href="/analisis">Mulai Sekarang</a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /Call To Action Section -->
+
+      
 {% endblock%}
