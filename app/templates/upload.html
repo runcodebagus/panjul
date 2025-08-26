@@ -65,6 +65,11 @@
     <!-- Hasil prediksi -->
     {% if df is defined %}
         <h3 class="mt-4">Hasil Prediksi Sentimen:</h3>
+<div class="d-flex gap-2 mt-3">
+          <a href="{{ url_for('download_results', token=token, format='xlsx') }}" class="btn btn-success">Download Excel</a>
+          <a href="{{ url_for('download_results', token=token, format='csv') }}" class="btn btn-outline-primary">Download CSV</a>
+      </div>
+        <div class="table-responsive">
         <table class="table table-striped table-bordered border-primary mt-3">
             <thead>
                 <tr>
@@ -81,9 +86,6 @@
                 {% endfor %}
             </tbody>
         </table>
-
-        <!-- Tombol Download (jika kamu simpan df.to_csv di folder static) -->
-        <a href="{{ url_for('static', filename='results.csv') }}" class="btn btn-primary mt-3" download>Download Hasil CSV</a>
     {% endif %}
 </div>
 {% endblock %}
