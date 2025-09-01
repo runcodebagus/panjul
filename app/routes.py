@@ -8,8 +8,15 @@ from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 import pickle
-import openpyxl  # pastikan terpasang untuk export Excel
+import openpyxl  
 from werkzeug.utils import secure_filename
+import io, uuid, time
+import csv, os
+from datetime import datetime
+from collections import Counter
+
+
+LOG_PATH = os.path.join(os.path.dirname(__file__), "data", "sentiment_log.csv")
 
 # ====== LOAD MODEL & VECTORIZER ======
 with open('model/model.pkl', 'rb') as model_file:
@@ -29,9 +36,6 @@ def preprocess_text(text):
     text = ' '.join([word for word in text.split() if word not in stop_words])
     return text
 
-# ====== SIMPLE IN-MEMORY CACHE (OPSI A) ======
-from flask import send_file, flash  # send_file sudah diimpor, flash dipakai di download
-import io, uuid, time
 
 CACHE_TTL_SECONDS = 60 * 30  # 30 menit
 # token -> {"df": DataFrame, "exp": epoch_seconds}
@@ -72,16 +76,58 @@ def upload():
 
 @app.route('/analyze_sentiment', methods=['POST'])
 def analyze_sentiment():
-    # bulk predict dari textarea/field multiple
+    texts = request.form.getlist('text')  # daftar teks
+    preprocessed_texts = [preprocess_text(t) for t in texts]
+    text_vectors = count_vectorizer.transform(preprocessed_texts)
+    sentiments = model.predict(text_vectors)
+
+    label_map = {0: 'bullying', 1: 'non-bullying'}
+    s_pred = pd.Series(sentiments).replace(label_map)
+    results = list(zip(texts, s_pred))
+
+    # === SIMPAN KE CSV ===
+    os.makedirs(os.path.dirname(LOG_PATH), exist_ok=True)
+    new_file = not os.path.exists(LOG_PATH)
+    with open(LOG_PATH, "a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        if new_file:
+            writer.writerow(["timestamp", "original_text", "sentiment"])
+        ts = datetime.utcnow().isoformat()
+        for text, label in results:
+            writer.writerow([ts, text, label])
+
+    # === HITUNG TOP PENCARIAN DARI CSV ===
+    top_results = []
+    if os.path.exists(LOG_PATH):
+        with open(LOG_PATH, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            texts_all = [row["original_text"].strip() for row in reader if row.get("original_text")]
+            counts = Counter(texts_all)
+            top_results = counts.most_common(10)  # Top 10
+
+    # kirim hasil prediksi & top search ke template
+    return render_template('analisis.html', results=results, top_results=top_results)
     texts = request.form.getlist('text')  # daftar teks
     preprocessed_texts = [preprocess_text(t) for t in texts]
     text_vectors = count_vectorizer.transform(preprocessed_texts)
     sentiments = model.predict(text_vectors)  # hasil numerik sesuai training
-    # kalau mau tampil string, siapkan mapping di sini juga
+
     label_map = {0: 'bullying', 1: 'non-bullying'}
-    # gunakan Series agar sejajar & mudah dipetakan
     s_pred = pd.Series(sentiments).replace(label_map)
     results = list(zip(texts, s_pred))
+
+    # === SIMPAN KE CSV ===
+    os.makedirs(os.path.dirname(LOG_PATH), exist_ok=True)
+    new_file = not os.path.exists(LOG_PATH)
+
+    with open(LOG_PATH, "a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        if new_file:
+            writer.writerow(["timestamp", "original_text", "sentiment"])
+        ts = datetime.utcnow().isoformat()
+        for text, label in results:
+            writer.writerow([ts, text, label])
+
     return render_template('analisis.html', results=results)
 
 @app.route('/upload_file', methods=['GET', 'POST'])

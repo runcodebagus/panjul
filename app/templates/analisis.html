@@ -22,7 +22,7 @@
             </div>
           </form>
         </div>
-
+        
         <ul>
           {% for text, sentiment in results %}
 
@@ -37,6 +37,14 @@
           </li>
           {% endfor %}
         </ul>
+        {% if top_results %}
+        <h2>Data yang Sering Dicari</h2>
+          <ol>
+            {% for text, total in top_results %}
+              <li>{{ text }} — <strong>{{ total }}×</strong></li>
+            {% endfor %}
+          </ol>
+        {% endif %}
       </div>
       <div class="col-lg-4">
         <div class="cta-image" data-aos="zoom-out" data-aos-delay="200">
