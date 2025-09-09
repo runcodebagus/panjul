@@ -59,8 +59,21 @@
         </div>
       </section>
     <br>
-
-<div class="container">
+    <div class="container">
+      
+    {% if top_unigram %}
+      <h2>Top Kata Paling Sering Muncul (Batch Upload Ini)</h2>
+      {% if uploaded_filename %}
+        <p class="muted">Sumber: {{ uploaded_filename }}</p>
+      {% endif %}
+      <ol>
+        {% for term, total in top_unigram %}
+          <li>{{ term }} — <strong>{{ total }}×</strong></li>
+        {% endfor %}
+      </ol>
+    {% endif %}
+    </div>
+    <div class="container">
 
     <!-- Hasil prediksi -->
     {% if df is defined %}

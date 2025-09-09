@@ -11,12 +11,10 @@ import pickle
 import openpyxl  
 from werkzeug.utils import secure_filename
 import io, uuid, time
-import csv, os
-from datetime import datetime
 from collections import Counter
+import re
 
 
-LOG_PATH = os.path.join(os.path.dirname(__file__), "data", "sentiment_log.csv")
 
 # ====== LOAD MODEL & VECTORIZER ======
 with open('model/model.pkl', 'rb') as model_file:
@@ -36,6 +34,12 @@ def preprocess_text(text):
     text = ' '.join([word for word in text.split() if word not in stop_words])
     return text
 
+def batch_top_unigram(preprocessed_series: pd.Series, min_len: int = 3, top_n: int = 10):
+    c = Counter()
+    for s in preprocessed_series.dropna().astype(str):
+        toks = [w for w in s.split() if len(w) >= min_len]
+        c.update(toks)
+    return c.most_common(top_n)
 
 CACHE_TTL_SECONDS = 60 * 30  # 30 menit
 # token -> {"df": DataFrame, "exp": epoch_seconds}
@@ -75,6 +79,19 @@ def upload():
     return render_template('upload.html')
 
 @app.route('/analyze_sentiment', methods=['POST'])
+def analyze_sentiment():
+    texts = request.form.getlist('text')  # daftar teks
+    preprocessed_texts = [preprocess_text(t) for t in texts]
+    text_vectors = count_vectorizer.transform(preprocessed_texts)
+    sentiments = model.predict(text_vectors)
+
+    label_map = {0: 'bullying', 1: 'non-bullying'}
+    s_pred = pd.Series(sentiments).replace(label_map)
+    results = list(zip(texts, s_pred))
+
+    # tidak ada simpan CSV, tidak ada hitung/top
+    return render_template('analisis.html', results=results)
+
 def analyze_sentiment():
     texts = request.form.getlist('text')  # daftar teks
     preprocessed_texts = [preprocess_text(t) for t in texts]
@@ -151,7 +168,7 @@ def upload_file():
             else:
                 df = pd.read_excel(uploaded_file)
 
-            # --- pastikan kolom 'Komentar' ada (fallback beberapa nama umum) ---
+            # --- pastikan kolom 'Komentar' ada ---
             if 'Komentar' not in df.columns:
                 for alt in ['komentar', 'text', 'tweet', 'ulasan']:
                     if alt in df.columns:
@@ -165,26 +182,26 @@ def upload_file():
             df['Preprocessed Text'] = df['Komentar'].apply(preprocess_text)
             text_vectors = count_vectorizer.transform(df['Preprocessed Text'])
 
-            # --- prediksi (bulk) ---
+            # --- prediksi ---
             y_pred = model.predict(text_vectors)
-
-            # --- mapping label AMAN (perbaikan error ndarray) ---
             label_map = {0: 'bullying', 1: 'non-bullying'}
-            # Opsi aman 1: jadikan Series lalu replace
             s_pred = pd.Series(y_pred, index=df.index)
             df['Sentiment'] = s_pred.replace(label_map)
 
-            # --- pilih kolom yang akan ditampilkan/diunduh ---
+            # --- hasil untuk ditampilkan/unduh ---
             result_df = df[['Komentar', 'Sentiment']].copy()
+            token = _put_cache(result_df)  # kalau mau tombol download tetap ada
 
-            # --- simpan ke cache, kirim token ke template ---
-            token = _put_cache(result_df)
+            # === HITUNG Top kata dari batch upload INI saja ===
+            top_unigram = batch_top_unigram(df['Preprocessed Text'], min_len=3, top_n=10)
 
             return render_template(
                 'upload.html',
                 prediction_success_message='Analisis berhasil! Hasil ditampilkan di bawah.',
+                uploaded_filename=filename,
                 df=result_df,
-                token=token
+                token=token,
+                top_unigram=top_unigram
             )
 
         except Exception as e:
@@ -192,6 +209,7 @@ def upload_file():
 
     # GET
     return render_template('upload.html')
+
 
 @app.route('/download_results/<token>')
 def download_results(token):
